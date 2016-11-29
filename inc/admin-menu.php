@@ -142,7 +142,8 @@ function hm_menu_output( $menu, $submenu, $submenu_as_parent = true ) {
         echo "\n\t<li$class$id$aria_hidden>";
 
         if ( $is_separator ) {
-            echo '<div class="separator"></div>';
+            // Not gonna need this... Just comment it out for simplcity :)
+            // echo '<div class="separator"></div>';
         } elseif ( $submenu_as_parent && ! empty( $submenu_items ) ) {
             $submenu_items = array_values( $submenu_items );  // Re-index.
             $menu_hook = get_plugin_page_hook( $submenu_items[0][2], $item[2] );

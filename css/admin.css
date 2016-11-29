@@ -40,11 +40,15 @@
 }
 
 #adminmenu li.menu-top {
+    display: none;
+}
+
+#adminmenu li.menu-top.is-visible {
     display: inline-block;
 }
 
 #adminmenu li.wp-menu-separator {
-    display: inline-block;
+    display: inline-block !important;
 }
 
 #adminmenu div.wp-menu-name {
@@ -145,7 +149,7 @@ ul#adminmenu>li.current>a.current::after {
 #adminmenu .sm-more-dropdown > li {
     border-right: 1px solid #424242;
     border-bottom: 1px solid #424242;
-    display: flex;
+    display: none;
     vertical-align: top;
     flex: 1 1 auto;
     justify-content: flex-start;
@@ -153,6 +157,14 @@ ul#adminmenu>li.current>a.current::after {
     flex-direction: column;
     padding: 0;
     max-width: calc(20% - 1px);
+}
+
+#adminmenu .sm-more-dropdown > li.is-visible {
+    display: flex;
+}
+
+#adminmenu .sm-more-dropdown a.menu-top{
+    width:  100%;
 }
 
 #adminmenu .sm-more-dropdown .hm-submenu {
@@ -203,5 +215,22 @@ ul#adminmenu>li.current>a.current::after {
     .hm-show-more {
         width: 80px;
         background-color: #9a9fa5;
+    }
+
+    .auto-fold #adminmenu .sm-more-dropdown .wp-menu-name {
+        position: relative;
+        left: 0;
+    }
+
+    .auto-fold #adminmenu .sm-more-dropdown .wp-menu-image {
+        display:  none;
+    }
+
+    .auto-fold #adminmenu .sm-more-dropdown div.wp-menu-name {
+        padding: 10px;
+    }
+
+    .auto-fold #adminmenu .sm-more-dropdown .wp-submenu-head {
+        display: none;
     }
 }
