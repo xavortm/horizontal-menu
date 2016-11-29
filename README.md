@@ -8,4 +8,4 @@ All menu items in the dropdown are opened, so you can easily scan the menu items
 
 This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests.
 
-(Plugin screenshot)[http://i.imgur.com/KhjCxyd.png]
+[Plugin screenshot](http://i.imgur.com/KhjCxyd.png)
