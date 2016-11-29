@@ -31,13 +31,23 @@ jQuery(document).ready(function($) {
 		);
 	});
 
+	/**
+	 * Advanced TODO:
+	 * --------------
+	 * If the menu has no submenus add it as submenu to the first item in the dropdown menu.
+	 * Meaning, all items with no dropdowns that are inside the "more" dropdown are listed on the left,
+	 * and all that do have dropdowns are listed after that just as they are right now.
+	 */
+
 
 	// Responsive main menu array
 	var menuItemsObj = {};
 	var menuItemsDropdownObj = {};
 
-	// Run this function only once. It will also fill in the array
-	// containing all menu items
+	/**
+	 * Run this function only once. It will also fill in the array
+	 * containing all menu items
+	 */
 	function calculateMenuItemsWidth() {
 		var menuItemsWidth = 0;
 
@@ -46,37 +56,39 @@ jQuery(document).ready(function($) {
 			menuItemsObj[menuItemsWidth] = $(this);
 		});
 
-		console.log("menuItemsWidth returned from calculateMenuItemsWidth() == " + menuItemsWidth);
-
 		return menuItemsWidth;
 	}
 
+	/**
+	 * What is the area allowed for visible menu items. The number 150
+	 * is the "buffer" to make sure verything runs smoothly.
+	 *
+	 * @return {int} the width in pixels allowed
+	 */
 	function calculateAllowedArea() {
 		var showMoreWidth = $(".hm-show-more").width() + 150;
 		var windowWidth = $(window).width();
 
-		console.log("Allowed area returned from calculateAllowedArea() == " + (windowWidth - showMoreWidth) );
-
 		return windowWidth - showMoreWidth;
 	}
 
+	/**
+	 * This is the function that is being run on screen resize.
+	 */
 	function responsiveMenuDropdown() {
 		var allowedMenuWIdth = calculateAllowedArea();
 		var remapMenu = false;
 		var itemsToRemove = 0;
 
-		var loop = 0;
 		$.each(menuItemsObj, function(key, value) {
 			if (key >= allowedMenuWIdth) {
 				menuItemsDropdownObj[key] = value;
 				menuItemsObj[key] = null;
 				itemsToRemove++;
 			}
-			console.log(loop++);
 		});
 
-		console.log("Items to remove == " + itemsToRemove);
-
+		// TODO: Refactor this bit
 		if(itemsToRemove == 0) {
 			$(".hm-show-more").hide();
 			$("#hm-adminmenumain .sm-more-dropdown > li").slice( -itemsToRemove ).addClass('is-visible');

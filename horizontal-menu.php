@@ -54,18 +54,18 @@ class Horizontal_Menu {
 		// add script and style calls the WP way
 		// it's a bit confusing as styles are called with a scripts hook
 		// @blamenacin - http://make.wordpress.org/core/2011/12/12/use-wp_enqueue_scripts-not-wp_print_styles-to-enqueue-scripts-and-styles-for-the-frontend/
-		add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_JS' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_CSS' ) );
+		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_JS' ) );
+		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_CSS' ) );
 
 		// add scripts and styles only available in admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_JS' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
 
 		// register admin pages for the plugin
-		add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
+		// add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
 
 		// register meta boxes for Pages (could be replicated for posts and custom post types)
-		add_action( 'add_meta_boxes', array( $this, 'hm_meta_boxes_callback' ) );
+		// add_action( 'add_meta_boxes', array( $this, 'hm_meta_boxes_callback' ) );
 
 		// register save_post hooks for saving the custom fields
 		add_action( 'save_post', array( $this, 'hm_save_sample_field' ) );
@@ -78,10 +78,10 @@ class Horizontal_Menu {
 		add_action( 'plugins_loaded', array( $this, 'hm_add_textdomain' ) );
 
 		// Add earlier execution as it needs to occur before admin page display
-		add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
+		// add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
 
 		// Add a sample shortcode
-		add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
+		// add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
 
 		// Add a sample widget
 		add_action( 'widgets_init', array( $this, 'hm_sample_widget' ) );
