@@ -125,6 +125,7 @@ ul#adminmenu>li.current>a.current::after {
 
 .hm-show-more:hover .sm-more-dropdown {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .sm-more-dropdown {
@@ -151,12 +152,11 @@ ul#adminmenu>li.current>a.current::after {
     border-bottom: 1px solid #424242;
     display: none;
     vertical-align: top;
-    flex: 1 1 auto;
+    flex: 1 1 150px;
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
     padding: 0;
-    max-width: calc(20% - 1px);
 }
 
 #adminmenu .sm-more-dropdown > li.menu-top.is-visible {

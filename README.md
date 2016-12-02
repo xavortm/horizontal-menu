@@ -8,6 +8,8 @@ All menu items in the dropdown are opened, so you can easily scan the menu items
 
 ![Plugin in action](https://media.giphy.com/media/l3vRmn8TG1JCzv4fm/giphy.gif)
 
+![No dropdown menu items are listed first](http://i.imgur.com/OC1o8mD.png)
+
 ## State of the plugin and contributions
 
 This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests.
