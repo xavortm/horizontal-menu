@@ -159,7 +159,12 @@ ul#adminmenu>li.current>a.current::after {
     max-width: calc(20% - 1px);
 }
 
-#adminmenu .sm-more-dropdown > li.is-visible {
+#adminmenu .sm-more-dropdown > li.menu-top.is-visible {
+    display:  none;
+}
+
+#adminmenu .sm-more-dropdown > li.hm-wp-has-submenu.is-visible,
+#adminmenu .sm-more-dropdown > li.no-dropdown-group.is-visible {
     display: flex;
 }
 
@@ -176,7 +181,7 @@ ul#adminmenu>li.current>a.current::after {
 
 #adminmenu .sm-more-dropdown > li:hover .hm-submenu,
 #adminmenu .sm-more-dropdown > li:hover {
-    background: #30363c;
+    background: #22272d;
 }
 
 #adminmenu .sm-more-dropdown .wp-menu-separator {
@@ -233,4 +238,17 @@ ul#adminmenu>li.current>a.current::after {
     .auto-fold #adminmenu .sm-more-dropdown .wp-submenu-head {
         display: none;
     }
+}
+
+#adminmenu li.no-dropdown-group {
+    background: black;
+}
+
+#adminmenu li.no-dropdown-group a:focus div.wp-menu-image:before,
+#adminmenu li.no-dropdown-group.opensub div.wp-menu-image:before,
+#adminmenu li.no-dropdown-group:hover div.wp-menu-image:before,
+#adminmenu li.no-dropdown-group a div.wp-menu-image:before,
+#adminmenu li.no-dropdown-group div.wp-menu-image:before,
+#adminmenu li.no-dropdown-group div.wp-menu-image:before {
+    color: rgba(240,245,250,.6);
 }

@@ -96,10 +96,10 @@ jQuery(document).ready(function($) {
 		} else {
 			$(".hm-show-more").show();
 			$("#hm-adminmenumain #adminmenu > li").each(function(){ $(this).addClass('is-visible') });
-			$("#hm-adminmenumain .sm-more-dropdown > li").each(function(){ $(this).removeClass('is-visible') });
+			$("#hm-adminmenumain .sm-more-dropdown > li:not(.no-dropdown-group)").each(function(){ $(this).removeClass('is-visible') });
 
 			$("#hm-adminmenumain #adminmenu > li").slice( -itemsToRemove ).removeClass('is-visible');
-			$("#hm-adminmenumain .sm-more-dropdown > li").slice( -itemsToRemove ).addClass('is-visible');
+			$("#hm-adminmenumain .sm-more-dropdown > li:not(.no-dropdown-group)").slice( -itemsToRemove ).addClass('is-visible');
 		}
 	}
 

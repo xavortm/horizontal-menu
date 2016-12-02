@@ -25,8 +25,9 @@ $self = preg_replace('|^.*/mu-plugins/|i', '', $self);
  * @global array  $submenu
  * @global string $parent_file
  * @global string $submenu_file
+ * @global array $no_dropdown_menu_items
  */
-global $menu, $submenu, $parent_file, $submenu_file;
+global $menu, $submenu, $parent_file, $submenu_file, $no_dropdown_menu_items;
 
 /**
  * Filters the parent file of an admin menu sub-menu item.
@@ -49,6 +50,11 @@ $parent_file = apply_filters( 'parent_file', $parent_file );
  */
 $submenu_file = apply_filters( 'submenu_file', $submenu_file, $parent_file );
 
+/**
+ * Keep the single menu item dropdown
+ */
+$no_dropdown_menu_items = array();
+
 get_admin_page_parent();
 
 /**
@@ -67,8 +73,8 @@ get_admin_page_parent();
  * @param array $submenu
  * @param bool  $submenu_as_parent
  */
-function hm_menu_output( $menu, $submenu, $submenu_as_parent = true ) {
-    global $self, $parent_file, $submenu_file, $plugin_page, $typenow;
+function hm_menu_output( $menu, $submenu, $submenu_as_parent = true, $no_dropdown_menu_items = [] ) {
+    global $self, $parent_file, $submenu_file, $plugin_page, $typenow, $no_dropdown_menu_items;
 
     $first = true;
     // 0 = menu_title, 1 = capability, 2 = menu_slug, 3 = page_title, 4 = classes, 5 = hookname, 6 = icon_url
@@ -157,16 +163,28 @@ function hm_menu_output( $menu, $submenu, $submenu_as_parent = true ) {
                 echo "\n\t<a href='{$submenu_items[0][2]}'$class $aria_attributes>$arrow<div class='wp-menu-image$img_class'$img_style>$img</div><div class='wp-menu-name'>$title</div></a>";
             }
         } elseif ( ! empty( $item[2] ) && current_user_can( $item[1] ) ) {
+
+            // Here are the menu items that have no dropdown. Keep them spearated
+            // so that they populate the first dropdown item for the megadropdown.
+
             $menu_hook = get_plugin_page_hook( $item[2], 'admin.php' );
             $menu_file = $item[2];
+            $menu_item = '';
+
             if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
                 $menu_file = substr( $menu_file, 0, $pos );
             if ( ! empty( $menu_hook ) || ( ( 'index.php' != $item[2] ) && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! file_exists( ABSPATH . "/wp-admin/$menu_file" ) ) ) {
                 $admin_is_parent = true;
                 echo "\n\t<a href='admin.php?page={$item[2]}'$class $aria_attributes>$arrow<div class='wp-menu-image$img_class'$img_style>$img</div><div class='wp-menu-name'>{$item[0]}</div></a>";
+                $menu_item = "<a href='admin.php?page={$item[2]}'$class $aria_attributes>$arrow<div class='wp-menu-image$img_class'$img_style>$img</div><div class='wp-menu-name'>{$item[0]}</div></a>";
             } else {
                 echo "\n\t<a href='{$item[2]}'$class $aria_attributes>$arrow<div class='wp-menu-image$img_class'$img_style>$img</div><div class='wp-menu-name'>{$item[0]}</div></a>";
+                $menu_item = "<a href='{$item[2]}'$class $aria_attributes>$arrow<div class='wp-menu-image$img_class'$img_style>$img</div><div class='wp-menu-name'>{$item[0]}</div></a>";
             }
+
+            // array_push( $no_dropdown_menu_items, $menu_item );
+            if ( ! in_array( $menu_item, $no_dropdown_menu_items ) )
+                array_push( $no_dropdown_menu_items, $menu_item );
         }
 
         if ( ! empty( $submenu_items ) ) {
@@ -264,7 +282,16 @@ echo '<div class="wp-menu-image dashicons-before dashicons-arrow-down-alt2"><br>
 echo '<div class="wp-menu-name">Show more</div>';
 echo '</span>';
 echo '<ul class="sm-more-dropdown">';
+
+echo "<li class='no-dropdown-group is-visible'>";
+foreach( $no_dropdown_menu_items as $item ) {
+    echo $item;
+}
+echo "</li>";
+
+// Li item here with the else array that have no dropdown
 hm_menu_output( $menu, $submenu );
+
 echo '</ul>';
 echo '</span>';
 
