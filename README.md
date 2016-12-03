@@ -10,6 +10,10 @@ All menu items in the dropdown are opened, so you can easily scan the menu items
 
 ![No dropdown menu items are listed first](http://i.imgur.com/OC1o8mD.png)
 
+The plugin settings page. Currently it's just on/off for the current user.
+
+![Settings page](http://i.imgur.com/tfKIGur.png)
+
 ## State of the plugin and contributions
 
 This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests.

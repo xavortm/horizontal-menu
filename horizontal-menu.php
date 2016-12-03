@@ -155,6 +155,9 @@ class Horizontal_Menu {
 	 */
 	public function hm_load_menu( $hook ) {
 
+		// Load it for the admin page
+		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
+
 		// See if the current user has the menu active
 		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
 
@@ -165,7 +168,6 @@ class Horizontal_Menu {
 
  		// add scripts and styles only available in admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_JS' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
 		add_action( 'wp_before_admin_bar_render', array( $this, 'hm_create_menu' ) );
 	}
 
