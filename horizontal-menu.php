@@ -57,18 +57,14 @@ class Horizontal_Menu {
 		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_JS' ) );
 		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_CSS' ) );
 
-		// add scripts and styles only available in admin
-		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_JS' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
-
 		// register admin pages for the plugin
-		// add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
+		add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
 
 		// register meta boxes for Pages (could be replicated for posts and custom post types)
 		// add_action( 'add_meta_boxes', array( $this, 'hm_meta_boxes_callback' ) );
 
 		// register save_post hooks for saving the custom fields
-		add_action( 'save_post', array( $this, 'hm_save_sample_field' ) );
+		// add_action( 'save_post', array( $this, 'hm_save_sample_field' ) );
 
 		// Register activation and deactivation hooks
 		register_activation_hook( __FILE__, 'hm_on_activate_callback' );
@@ -77,16 +73,21 @@ class Horizontal_Menu {
 		// Translation-ready
 		add_action( 'plugins_loaded', array( $this, 'hm_add_textdomain' ) );
 
+		// Load the plugin files here only if the user want's this menu active
+		add_action( 'plugins_loaded', array( $this, 'hm_load_menu' ) );
+
 		// Add earlier execution as it needs to occur before admin page display
-		// add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
+		add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
+
+		// The script to take care of the plugin toggling
+		add_action( 'admin_footer', array( $this, 'hm_activate_deactivate_ajax' ) );
+		add_action( 'wp_ajax_toggle_plugin', array( $this, 'toggle_plugin_callback' ) );
 
 		// Add a sample shortcode
 		// add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
 
 		// Add a sample widget
-		add_action( 'widgets_init', array( $this, 'hm_sample_widget' ) );
-
-		add_action( 'wp_before_admin_bar_render', array( $this, 'hm_create_menu' ) );
+		// add_action( 'widgets_init', array( $this, 'hm_sample_widget' ) );
 
 		/*
 		 * TODO:
@@ -95,12 +96,99 @@ class Horizontal_Menu {
 
 		// Add actions for storing value and fetching URL
 		// use the wp_ajax_nopriv_ hook for non-logged users (handle guest actions)
- 		add_action( 'wp_ajax_store_ajax_value', array( $this, 'store_ajax_value' ) );
- 		add_action( 'wp_ajax_fetch_ajax_url_http', array( $this, 'fetch_ajax_url_http' ) );
+		add_action( 'wp_ajax_store_ajax_value', array( $this, 'store_ajax_value' ) );
+		add_action( 'wp_ajax_fetch_ajax_url_http', array( $this, 'fetch_ajax_url_http' ) );
 
 	}
 
-	function hm_create_menu( $hook ) {
+	public function hm_activate_deactivate_ajax() {
+		?>
+			<script type="text/javascript" >
+			jQuery(document).ready(function($) {
+
+				jQuery(".horizontal-menu-toggle").on( "click", function(e) {
+					e.preventDefault;
+
+					var $button = jQuery(this);
+					var toggle = "deactivate";
+
+					if ( $button.hasClass("activate-horizontal-menu") ) {
+						toggle = "activate";
+					}
+
+					var data = {
+						'action': 'toggle_plugin',
+						'toggle': toggle
+					};
+
+					// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+					jQuery.post(ajaxurl, data, function(response) {
+						console.log(response);
+						// location.reload();
+					});
+				});
+			});
+			</script>
+		<?php
+	}
+
+	public function toggle_plugin_callback() {
+		$toggle_state = $_POST['toggle'];
+		$current_user = wp_get_current_user();
+
+		if ( ! ( $current_user instanceof WP_User ) ) {
+			return;
+		}
+
+		// Todo: Make this actually work on button click ...
+		if ( "activate" === $toggle_state ) {
+			update_user_meta( $current_user->ID, 'hm_menu_active', false );
+		} else {
+			update_user_meta( $current_user->ID, 'hm_menu_active', true );
+		}
+
+		exit;
+	}
+
+	/**
+	 * Load the menu only for users that have it activated.
+	 */
+	public function hm_load_menu( $hook ) {
+
+		// See if the current user has the menu active
+		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
+
+		if ( false === $current_user_has_menu ) {
+			add_action( 'admin_notices', array( $this, 'hm_notice_not_active' ) );
+			return;
+		}
+
+ 		// add scripts and styles only available in admin
+		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_JS' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
+		add_action( 'wp_before_admin_bar_render', array( $this, 'hm_create_menu' ) );
+	}
+
+	/**
+	 * Show that the menu plugin is not activated for the current user. While
+	 * the plugin is active, it is not working for all users, just for the ones
+	 * that want it.
+	 */
+	public function hm_notice_not_active() {
+		$current_user = wp_get_current_user();
+
+		if ( ! ( $current_user instanceof WP_User ) ) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-info is-dismissible">
+			<p><?php _e( 'Hey, ' . $current_user->display_name . '! <a href="#" class="">Enable Horizontal Menu</a> to move the left menu bar to the top. This option is only for you :) ', 'horizontalmenu' ); ?></p>
+		</div>
+		<?php
+	}
+
+	public function hm_create_menu( $hook ) {
 		require_once( HM_PATH . '/inc/admin-menu.php' );
 	}
 
@@ -167,7 +255,7 @@ class Horizontal_Menu {
 	 *
 	 */
 	public function hm_admin_pages_callback() {
-		add_menu_page(__( "Horizontal Menu Admin", 'hotizontalmenu' ), __( "Horizontal Menu Admin", 'hotizontalmenu' ), 'edit_themes', 'dx-plugin-base', array( $this, 'Horizontal_Menu' ) );
+		add_menu_page(__( "Horizontal Menu Admin", 'hotizontalmenu' ), __( "Horizontal Menu Admin", 'hotizontalmenu' ), 'edit_posts', 'horizontalmenu', array( $this, 'Horizontal_Menu' ) );
 		// add_submenu_page( 'dx-plugin-base', __( "Base Subpage", 'hotizontalmenu' ), __( "Base Subpage", 'hotizontalmenu' ), 'edit_themes', 'dx-base-subpage', array( $this, 'hm_plugin_subpage' ) );
 		// add_submenu_page( 'dx-plugin-base', __( "Remote Subpage", 'hotizontalmenu' ), __( "Remote Subpage", 'hotizontalmenu' ), 'edit_themes', 'dx-remote-subpage', array( $this, 'hm_plugin_side_access_page' ) );
 	}
@@ -209,21 +297,21 @@ class Horizontal_Menu {
 	public function hm_meta_boxes_callback() {
 		// register side box
 		add_meta_box(
-		        'hm_side_meta_box',
-		        __( "DX Side Box", 'hotizontalmenu' ),
-		        array( $this, 'hm_side_meta_box' ),
+			'hm_side_meta_box',
+			__( "DX Side Box", 'hotizontalmenu' ),
+			array( $this, 'hm_side_meta_box' ),
 		        'pluginbase', // leave empty quotes as '' if you want it on all custom post add/edit screens
 		        'side',
 		        'high'
-		    );
+		        );
 
 		// register bottom box
 		add_meta_box(
-		    	'hm_bottom_meta_box',
-		    	__( "DX Bottom Box", 'hotizontalmenu' ),
-		    	array( $this, 'hm_bottom_meta_box' ),
+			'hm_bottom_meta_box',
+			__( "DX Bottom Box", 'hotizontalmenu' ),
+			array( $this, 'hm_bottom_meta_box' ),
 		    	'' // leave empty quotes as '' if you want it on all custom post add/edit screens or add a post type slug
-		    );
+		    	);
 	}
 
 	/**
@@ -364,6 +452,8 @@ class Horizontal_Menu {
 		die();
 	}
 
+	// function
+
 }
 
 
@@ -372,7 +462,13 @@ class Horizontal_Menu {
  *
  */
 function hm_on_activate_callback() {
-	// do something on activation
+	$current_user = wp_get_current_user();
+
+	if ( ! ( $current_user instanceof WP_User ) ) {
+		return;
+	}
+
+	update_user_meta( $current_user->ID, 'hm_menu_active', true );
 }
 
 /**
