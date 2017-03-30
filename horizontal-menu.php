@@ -80,8 +80,8 @@ class Horizontal_Menu {
 		add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
 
 		// The script to take care of the plugin toggling
-		add_action( 'admin_footer', array( $this, 'hm_activate_deactivate_ajax' ) );
-		add_action( 'wp_ajax_toggle_plugin', array( $this, 'toggle_plugin_callback' ) );
+		// add_action( 'admin_footer', array( $this, 'hm_activate_deactivate_ajax' ) );
+		// add_action( 'wp_ajax_toggle_plugin', array( $this, 'toggle_plugin_callback' ) );
 
 		// Add a sample shortcode
 		// add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
@@ -155,9 +155,6 @@ class Horizontal_Menu {
 	 */
 	public function hm_load_menu( $hook ) {
 
-		// Load it for the admin page
-		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
-
 		// See if the current user has the menu active
 		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
 
@@ -165,6 +162,9 @@ class Horizontal_Menu {
 			add_action( 'admin_notices', array( $this, 'hm_notice_not_active' ) );
 			return;
 		}
+
+		// Load it for the admin page
+		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_CSS' ) );
 
  		// add scripts and styles only available in admin
 		add_action( 'admin_enqueue_scripts', array( $this, 'hm_add_admin_JS' ) );
