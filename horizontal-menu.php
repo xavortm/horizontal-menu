@@ -82,6 +82,7 @@ class Horizontal_Menu {
 		// The script to take care of the plugin toggling
 		// add_action( 'admin_footer', array( $this, 'hm_activate_deactivate_ajax' ) );
 		// add_action( 'wp_ajax_toggle_plugin', array( $this, 'toggle_plugin_callback' ) );
+		add_action( 'admin_post_save_hm_toggle', array( $this, 'toggle_plugin_callback' )  );
 
 		// Add a sample shortcode
 		// add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
@@ -133,7 +134,7 @@ class Horizontal_Menu {
 	}
 
 	public function toggle_plugin_callback() {
-		$toggle_state = $_POST['toggle'];
+		$toggle_state = $_REQUEST['toggle'];
 		$current_user = wp_get_current_user();
 
 		if ( ! ( $current_user instanceof WP_User ) ) {
@@ -141,12 +142,14 @@ class Horizontal_Menu {
 		}
 
 		// Todo: Make this actually work on button click ...
-		if ( "activate" === $toggle_state ) {
-			update_user_meta( $current_user->ID, 'hm_menu_active', false );
-		} else {
+		if ( "enable" === $toggle_state ) {
 			update_user_meta( $current_user->ID, 'hm_menu_active', true );
+		} else {
+			update_user_meta( $current_user->ID, 'hm_menu_active', false );
 		}
 
+		wp_redirect( basename( wp_get_referer() ) );
+		
 		exit;
 	}
 
@@ -158,7 +161,7 @@ class Horizontal_Menu {
 		// See if the current user has the menu active
 		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
 
-		if ( false === $current_user_has_menu ) {
+		if ( false === (boolean) $current_user_has_menu ) {
 			add_action( 'admin_notices', array( $this, 'hm_notice_not_active' ) );
 			return;
 		}
@@ -185,7 +188,7 @@ class Horizontal_Menu {
 
 		?>
 		<div class="notice notice-info is-dismissible">
-			<p><?php _e( 'Hey, ' . $current_user->display_name . '! <a href="#" class="">Enable Horizontal Menu</a> to move the left menu bar to the top. This option is only for you :) ', 'horizontalmenu' ); ?></p>
+			<p><?php _e( 'Hey, ' . $current_user->display_name . '! <a href="'. esc_url( admin_url('admin-post.php') ) .'?action=save_hm_toggle&toggle=enable" class="">Enable Horizontal Menu</a> to move the left menu bar to the top. This option is only for you :) ', 'horizontalmenu' ); ?></p>
 		</div>
 		<?php
 	}

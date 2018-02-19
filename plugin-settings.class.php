@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'You cannot access this page directly.' );
 
 class HM_Plugin_Settings {
 
