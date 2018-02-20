@@ -148,7 +148,7 @@ class Horizontal_Menu {
 			update_user_meta( $current_user->ID, 'hm_menu_active', false );
 		}
 
-		wp_redirect( basename( wp_get_referer() ) );
+		wp_redirect( wp_get_referer() );
 		
 		exit;
 	}
