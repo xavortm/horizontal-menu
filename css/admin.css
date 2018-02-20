@@ -257,7 +257,7 @@ ul#adminmenu>li.current>a.current::after {
 
 
 /* The settings page */
-.toplevel_page_horizontalmenu #wpwrap {
+/* .toplevel_page_horizontalmenu #wpwrap {
     padding: 40px;
     display: flex;
     align-items: flex-start;
@@ -302,4 +302,4 @@ ul#adminmenu>li.current>a.current::after {
     margin-top:  20px;
     display: block;
     text-align: center;
-}
+} */
