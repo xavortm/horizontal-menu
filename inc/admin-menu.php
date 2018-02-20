@@ -55,7 +55,7 @@ $submenu_file = apply_filters( 'submenu_file', $submenu_file, $parent_file );
  */
 $no_dropdown_menu_items = array();
 
-get_admin_page_parent();
+//get_admin_page_parent();
 
 /**
  * Display menu.
