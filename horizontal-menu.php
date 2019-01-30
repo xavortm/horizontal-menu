@@ -58,7 +58,7 @@ class Horizontal_Menu {
 		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_CSS' ) );
 
 		// register admin pages for the plugin
-		add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
+		//add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
 
 		// register meta boxes for Pages (could be replicated for posts and custom post types)
 		// add_action( 'add_meta_boxes', array( $this, 'hm_meta_boxes_callback' ) );
@@ -99,6 +99,10 @@ class Horizontal_Menu {
 		// use the wp_ajax_nopriv_ hook for non-logged users (handle guest actions)
 		add_action( 'wp_ajax_store_ajax_value', array( $this, 'store_ajax_value' ) );
 		add_action( 'wp_ajax_fetch_ajax_url_http', array( $this, 'fetch_ajax_url_http' ) );
+
+		// Action hooks for Profile on show and edit
+		add_action( 'show_user_profile', array( $this , 'add_hm_on_off' ) );
+		add_action( 'personal_options_update', array( $this , 'save_hm_on_off' ) );
 
 	}
 
@@ -263,6 +267,43 @@ class Horizontal_Menu {
 		add_menu_page(__( "Horizontal Menu Admin", 'hotizontalmenu' ), __( "Horizontal Menu Admin", 'hotizontalmenu' ), 'edit_posts', 'horizontalmenu', array( $this, 'Horizontal_Menu' ) );
 		// add_submenu_page( 'dx-plugin-base', __( "Base Subpage", 'hotizontalmenu' ), __( "Base Subpage", 'hotizontalmenu' ), 'edit_themes', 'dx-base-subpage', array( $this, 'hm_plugin_subpage' ) );
 		// add_submenu_page( 'dx-plugin-base', __( "Remote Subpage", 'hotizontalmenu' ), __( "Remote Subpage", 'hotizontalmenu' ), 'edit_themes', 'dx-remote-subpage', array( $this, 'hm_plugin_side_access_page' ) );
+	}
+
+	/**
+	 *
+	 * Callback for adding a checkbox in Profile page
+	 *
+	 * This demo registers a custom page for the plugin and a subpage
+	 *
+	 */
+	public function add_hm_on_off() {
+		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
+		?>
+		<h3><?php _e("Horizontal Menu Settings", "blank"); ?></h3>
+		<table class="form-table">
+			<tr class="show-admin-bar user-admin-bar-front-wrap">
+				<th scope="row"><?php _e("Horizontal Menu"); ?></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text">
+							<span><?php _e("Horizontal Menu"); ?></span></legend>
+						<label for="hm_on_off">
+						<input name="hm_on_off" type="checkbox" id="hm_on_off" value="true" <?php if ( true === (boolean) $current_user_has_menu ) { ?>checked="checked"<?php } ?>>
+						<?php _e("Show navigation bar on top"); ?></label><br>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+	<?php }
+
+	public function save_hm_on_off( $user_id ) {
+
+		if ( !current_user_can( 'edit_user', $user_id ) ) {
+			return false;
+		}
+		$on_off = ( isset( $_POST['hm_on_off'] ) ? true : false );
+
+		update_user_meta( $user_id, 'hm_menu_active', $on_off );
 	}
 
 	/**
