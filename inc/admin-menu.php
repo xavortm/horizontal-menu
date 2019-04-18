@@ -268,7 +268,7 @@ function hm_menu_output( $menu, $submenu, $submenu_as_parent = true, $no_dropdow
 <ul id="adminmenu">
 
 <?php
-var_dump($menu);
+
 hm_menu_output( $menu, $submenu );
 /**
  * Fires after the admin menu has been output.
