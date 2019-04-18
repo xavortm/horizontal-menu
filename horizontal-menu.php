@@ -198,7 +198,9 @@ class Horizontal_Menu {
 	}
 
 	public function hm_create_menu( $hook ) {
-		require_once( HM_PATH . '/inc/admin-menu.php' );
+		if ( is_admin() ) {
+			require_once( HM_PATH . '/inc/admin-menu.php' );
+		}
 	}
 
 	/**
