@@ -19,4 +19,7 @@ The plugin settings page. Currently it's just on/off for the current user.
 This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests, be it in request for features or bug reports.
 
 **Huge ️️❤️to the following contributors:**
+
+[Mario Peshev](https://twitter.com/no_fear_inc) for the creation of the [DX Plugin Base](https://tg.wordpress.org/plugins/dx-plugin-base/)
+
 [Vladislav Abrashev](https://twitter.com/vabrashev), [Aleksander Venkov](https://devrix.com/about/team/aleksander-venkov/)

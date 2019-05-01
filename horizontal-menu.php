@@ -3,25 +3,25 @@
  * Plugin Name: Horizontal Menus
  * Description: Use horizontal admin menu instead of vertical one.
  * Author: Alex Dimitrov
- * Author URI: http://xavortm.com
- * Version: 0.1
+ * Author URI: https://xavortm.com
+ * Version: 0.2
  * Text Domain: horizontal-menu
  * License: GPL2
-
- Copyright 2011 Alex Dimitrov (email : xavortm AT gmail DOT com)
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License, version 2, as
- published by the Free Software Foundation.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * Copyright 2011 Alex Dimitrov (email : xavortm AT gmail DOT com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 /**
@@ -29,7 +29,7 @@
  *
  */
 
-define( 'HM_VERSION', '0.1' );
+define( 'HM_VERSION', '0.2' );
 define( 'HM_PATH', dirname( __FILE__ ) );
 define( 'HM_PATH_INCLUDES', dirname( __FILE__ ) . '/inc' );
 define( 'HM_FOLDER', basename( HM_PATH ) );
@@ -41,30 +41,15 @@ define( 'HM_URL_INCLUDES', HM_URL . '/inc' );
  *
  * The plugin base class - the root of all WP goods!
  *
- * @author nofearinc
+ * @author xavortm
  *
  */
 class Horizontal_Menu {
 
 	/**
-	 *
 	 * Assign everything as a call from within the constructor
 	 */
 	public function __construct() {
-		// add script and style calls the WP way
-		// it's a bit confusing as styles are called with a scripts hook
-		// @blamenacin - http://make.wordpress.org/core/2011/12/12/use-wp_enqueue_scripts-not-wp_print_styles-to-enqueue-scripts-and-styles-for-the-frontend/
-		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_JS' ) );
-		// add_action( 'wp_enqueue_scripts', array( $this, 'hm_add_CSS' ) );
-
-		// register admin pages for the plugin
-		//add_action( 'admin_menu', array( $this, 'hm_admin_pages_callback' ) );
-
-		// register meta boxes for Pages (could be replicated for posts and custom post types)
-		// add_action( 'add_meta_boxes', array( $this, 'hm_meta_boxes_callback' ) );
-
-		// register save_post hooks for saving the custom fields
-		// add_action( 'save_post', array( $this, 'hm_save_sample_field' ) );
 
 		// Register activation and deactivation hooks
 		register_activation_hook( __FILE__, 'hm_on_activate_callback' );
@@ -80,20 +65,11 @@ class Horizontal_Menu {
 		add_action( 'admin_init', array( $this, 'hm_register_settings' ), 5 );
 
 		// The script to take care of the plugin toggling
-		// add_action( 'admin_footer', array( $this, 'hm_activate_deactivate_ajax' ) );
-		// add_action( 'wp_ajax_toggle_plugin', array( $this, 'toggle_plugin_callback' ) );
 		add_action( 'admin_post_save_hm_toggle', array( $this, 'toggle_plugin_callback' )  );
 
-		// Add a sample shortcode
-		// add_action( 'init', array( $this, 'hm_sample_shortcode' ) );
-
-		// Add a sample widget
-		// add_action( 'widgets_init', array( $this, 'hm_sample_widget' ) );
-
-		/*
-		 * TODO:
-		 * 		template_redirect
-		 */
+		
+		// TODO:
+		// template_redirect
 
 		// Add actions for storing value and fetching URL
 		// use the wp_ajax_nopriv_ hook for non-logged users (handle guest actions)
@@ -103,7 +79,6 @@ class Horizontal_Menu {
 		// Action hooks for Profile on show and edit
 		add_action( 'show_user_profile', array( $this , 'add_hm_on_off' ) );
 		add_action( 'personal_options_update', array( $this , 'save_hm_on_off' ) );
-
 	}
 
 	public function hm_activate_deactivate_ajax() {
@@ -204,11 +179,9 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Adding JavaScript scripts
 	 *
 	 * Loading existing scripts from wp-includes or adding custom ones
-	 *
 	 */
 	public function hm_add_JS() {
 		wp_enqueue_script( 'jquery' );
@@ -219,11 +192,9 @@ class Horizontal_Menu {
 
 
 	/**
-	 *
 	 * Adding JavaScript scripts for the admin pages only
 	 *
 	 * Loading existing scripts from wp-includes or adding custom ones
-	 *
 	 */
 	public function hm_add_admin_JS( $hook ) {
 		wp_enqueue_script( 'jquery' );
@@ -232,9 +203,7 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Add CSS styles
-	 *
 	 */
 	public function hm_add_CSS() {
 		wp_register_style( 'public', plugins_url( '/css/public.css', __FILE__ ), array(), '1.0', 'screen' );
@@ -242,9 +211,7 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Add admin CSS styles - available only on admin
-	 *
 	 */
 	public function hm_add_admin_CSS( $hook ) {
 		wp_register_style( 'admin', plugins_url( '/css/admin.css', __FILE__ ), array(), '1.0', 'screen' );
@@ -259,11 +226,9 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Callback for registering pages
 	 *
 	 * This demo registers a custom page for the plugin and a subpage
-	 *
 	 */
 	public function hm_admin_pages_callback() {
 		add_menu_page(__( "Horizontal Menu Admin", 'hotizontalmenu' ), __( "Horizontal Menu Admin", 'hotizontalmenu' ), 'edit_posts', 'horizontalmenu', array( $this, 'Horizontal_Menu' ) );
@@ -272,11 +237,9 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Callback for adding a checkbox in Profile page
 	 *
 	 * This demo registers a custom page for the plugin and a subpage
-	 *
 	 */
 	public function add_hm_on_off() {
 		$current_user_has_menu = get_user_option( 'hm_menu_active', get_current_user_id() );
@@ -309,9 +272,7 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * The content of the base page
-	 *
 	 */
 	public function Horizontal_Menu() {
 		include_once( HM_PATH_INCLUDES . '/base-page-template.php' );
@@ -322,13 +283,11 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * The content of the subpage
 	 *
 	 * Use some default UI from WordPress guidelines echoed here (the sample above is with a template)
 	 *
 	 * @see http://www.onextrapixel.com/2009/07/01/how-to-design-and-style-your-wordpress-plugin-admin-panel/
-	 *
 	 */
 	public function hm_plugin_subpage() {
 		echo '<div class="wrap">';
@@ -338,9 +297,7 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 *  Adding right and bottom meta boxes to Pages
-	 *
 	 */
 	public function hm_meta_boxes_callback() {
 		// register side box
@@ -363,8 +320,8 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Init right side meta box here
+	 * 
 	 * @param post $post the post object of the given page
 	 * @param metabox $metabox metabox data
 	 */
@@ -385,9 +342,9 @@ class Horizontal_Menu {
 
 	/**
 	 * Save the custom field from the side metabox
+	 * 
 	 * @param $post_id the current post ID
 	 * @return post_id the post ID from the input arguments
-	 *
 	 */
 	public function hm_save_sample_field( $post_id ) {
 		// Avoid autosaves
@@ -409,8 +366,8 @@ class Horizontal_Menu {
 	}
 
 	/**
-	 *
 	 * Init bottom meta box here
+	 * 
 	 * @param post $post the post object of the given page
 	 * @param metabox $metabox metabox data
 	 */
@@ -422,7 +379,6 @@ class Horizontal_Menu {
 	 * Initialize the Settings class
 	 *
 	 * Register a settings section with a field for a secure WordPress admin option creation.
-	 *
 	 */
 	public function hm_register_settings() {
 		require_once( HM_PATH . '/plugin-settings.class.php' );
@@ -433,7 +389,6 @@ class Horizontal_Menu {
 	 * Register a sample shortcode to be used
 	 *
 	 * First parameter is the shortcode name, would be used like: [dxsampcode]
-	 *
 	 */
 	public function hm_sample_shortcode() {
 		add_shortcode( 'dxsampcode', array( $this, 'hm_sample_shortcode_body' ) );
@@ -441,6 +396,7 @@ class Horizontal_Menu {
 
 	/**
 	 * Returns the content of the sample shortcode, like [dxsamplcode]
+	 * 
 	 * @param array $attr arguments passed to array, like [dxsamcode attr1="one" attr2="two"]
 	 * @param string $content optional, could be used for a content to be wrapped, such as [dxsamcode]somecontnet[/dxsamcode]
 	 */
@@ -507,7 +463,6 @@ class Horizontal_Menu {
 
 /**
  * Register activation hook
- *
  */
 function hm_on_activate_callback() {
 	$current_user = wp_get_current_user();
@@ -521,7 +476,6 @@ function hm_on_activate_callback() {
 
 /**
  * Register deactivation hook
- *
  */
 function hm_on_deactivate_callback() {
 	// do something when deactivated

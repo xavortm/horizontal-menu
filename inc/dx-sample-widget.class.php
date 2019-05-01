@@ -4,7 +4,7 @@
  *
  * The widget name is DX Sample Widget
  *
- * @author nofearinc
+ * @author xavortm
  *
  */
 class HM_Sample_Widget extends WP_Widget {
