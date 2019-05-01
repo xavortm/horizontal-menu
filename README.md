@@ -16,5 +16,7 @@ The plugin settings page. Currently it's just on/off for the current user.
 
 ## State of the plugin and contributions
 
-This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests.
+This plugin is not yet released in the WordPress.org repository as it is still in development. I suggest you not to use it yet on production. If you want to contribute feel free to open issues or pull requests, be it in request for features or bug reports.
 
+**Huge ️️❤️to the following contributors:**
+[Vladislav Abrashev](https://twitter.com/vabrashev), [Aleksander Venkov](https://devrix.com/about/team/aleksander-venkov/)
